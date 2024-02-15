@@ -15,6 +15,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    // for custom annotation
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // for OpenFgaClient
+    implementation 'dev.openfga:openfga-sdk:0.3.2'
+
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

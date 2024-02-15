@@ -1,0 +1,16 @@
+openfga:
+  fgaApiUrl: http://localhost:8080
+  fgaStoreId:
+  authorizationModelId:
+
+#TODO run OpenFGA on different port and let spring use default port 8080
+server:
+  port: 4000
+
+logging:
+  level:
+    root: WARN
+    org:
+      example: TRACE
+      springframework:
+        security: DEBUG

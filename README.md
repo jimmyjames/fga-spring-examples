@@ -9,8 +9,8 @@ Simple repository demonstrating use cases and possible solutions to integrate FG
 ### Run OpenFGA
 
 ```bash
-docker pull openfga/openfga
-docker run -p 8080:8080 -p 8081:8081 -p 3000:3000 openfga/openfga run
+docker pull openfga/openfga:latest
+docker run --rm -e OPENFGA_HTTP_ADDR=0.0.0.0:4000 -p 4000:4000 -p 8081:8081 -p 3000:3000 openfga/openfga run
 ```
 
 See the [OpenFGA docs](https://openfga.dev/docs/getting-started/setup-openfga/docker#step-by-step) for more information.

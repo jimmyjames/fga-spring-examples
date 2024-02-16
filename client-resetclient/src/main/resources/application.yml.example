@@ -1,0 +1,22 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          okta:
+            client-id: {AUTH_0_CLIENT_ID}
+            client-secret: {AUTH_0_CLIENT_SECRET}
+            authorization-grant-type: client_credentials
+        provider:
+          okta:
+            token-uri: https://{YOUR-DOMAIN}.auth0.com/oauth/token
+
+auth0-audience: {AUTH0-API-IDENTIFIER}
+
+logging:
+  level:
+    root: WARN
+    org:
+      example: TRACE
+      springframework:
+        security: DEBUG

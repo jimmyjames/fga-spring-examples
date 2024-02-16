@@ -32,7 +32,7 @@ public class FgaAspect {
         this.fgaClient = fgaClient;
     }
 
-    @Before("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(fga)")
+    @Before("@annotation(fga)")
     public void check(final JoinPoint jointPoint, final FgaCheck fga) {
         logger.debug("**** CUSTOM AOP CALLED *****");
 

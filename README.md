@@ -58,7 +58,7 @@ You should see a simple success message in the console.
 
 Execute a GET request to obtain `document:2`, for which `user:2` does not have a `reader` relation:
 
-`curl -X http://localhost:8080/docs/2`
+`curl -X http://localhost:8080/docs/2 -v`
 
 You should receive a 403 response as `user:123` does not have the `reader` relation to `document:2`
 
@@ -74,7 +74,7 @@ You should see a simple success message in the console.
 
 Execute a GET request to obtain `document:2`, for which `user:2` does not have a `reader` relation:
 
-`curl -X http://localhost:8080/docsaop/2`
+`curl -X http://localhost:8080/docsaop/2 -v`
 
 You should receive a 403 response as `user:123` does not have the `reader` relation to `document:2`
 

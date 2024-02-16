@@ -24,7 +24,8 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class FgaAspect {
 
-    Logger logger = LoggerFactory.getLogger(FgaAspect.class);
+    private final Logger logger = LoggerFactory.getLogger(FgaAspect.class);
+    
     private final OpenFgaClient fgaClient;
 
     FgaAspect(OpenFgaClient fgaClient) {

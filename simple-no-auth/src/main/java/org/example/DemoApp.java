@@ -31,11 +31,10 @@ public class DemoApp {
 
     /**
      * Simple Fga bean available for use in preauthorize. TODOs:
-     * - do we always need to hard-code the user ID or can we make some inferences and defaults for the current principal?
-     * - SpEL to create object (object type : id) isn't very friendly
-     * - optional/default params (e.g., userId, type) not very friendly
+     * - without any auth, we are just hard-coding the userId for simple demo purposes. Can we infer it from the principal in a real example?
+     * - multiple params of same type with optional params (e.g., userId) could be unwieldy
      */
-    @PreAuthorize("@openFga.check('user:123', 'reader', 'document:'.concat(#id))")
+    @PreAuthorize("@openFga.check(#id, 'document', 'reader', 'user', '123')")
     @GetMapping("/docs/{id}")
     public String simpleBean(@PathVariable String id) {
         return "You have access!";

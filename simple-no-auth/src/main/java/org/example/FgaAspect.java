@@ -25,14 +25,13 @@ import java.util.concurrent.ExecutionException;
 public class FgaAspect {
 
     private final Logger logger = LoggerFactory.getLogger(FgaAspect.class);
-    
+
     private final OpenFgaClient fgaClient;
 
     FgaAspect(OpenFgaClient fgaClient) {
         this.fgaClient = fgaClient;
     }
 
-    //    @Before("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(authorities)")
     @Before("within(@org.springframework.web.bind.annotation.RestController *) && @annotation(fga)")
     public void check(final JoinPoint jointPoint, final FgaCheck fga) {
         logger.debug("**** CUSTOM AOP CALLED *****");

@@ -41,10 +41,7 @@ public class DemoClient implements CommandLineRunner {
         OAuth2AuthorizedClient authorizedClient = this.authorizedClientServiceAndManager.authorize(authorizeRequest);
         OAuth2AccessToken accessToken = Objects.requireNonNull(authorizedClient).getAccessToken();
 
-        logger.info("Issued: " + Objects.requireNonNull(accessToken.getIssuedAt())
-                + ", Expires:" + Objects.requireNonNull(accessToken.getExpiresAt()));
-        logger.info("Scopes: " + accessToken.getScopes().toString());
-        logger.info("Token: " + accessToken.getTokenValue());
+        logger.info("Obtained token: " + accessToken.getTokenValue());
 
         // Configure RestClient to send the JWT as an Authorization: Bearer header on requests
         RestClient restClient = RestClient.builder()
@@ -57,8 +54,9 @@ public class DemoClient implements CommandLineRunner {
                 .retrieve()
                 .body(String.class);
 
-        logger.info("Server response: " + result);
+        logger.info("Request principal: " + result);
 
+        // generate a random ID to use when making requests
         Random random = new Random();
         String randomId = String.valueOf(Math.abs(random.nextInt()));
 
@@ -76,7 +74,7 @@ public class DemoClient implements CommandLineRunner {
         }
 
 
-        // create a doc
+        // create a doc and write an FGA tuple representing the relationship
         logger.info("Will call resource server to create a document with ID " + randomId + ", and write FGA authorization data");
         String writeResponse = restClient.post()
                 .uri("http://localhost:8082/docs")
@@ -85,7 +83,7 @@ public class DemoClient implements CommandLineRunner {
                 .body(String.class);
         logger.info("====> Response from creating document: " + writeResponse);
 
-        // try and retrieve doc, protected by JWT and FGA
+        // try and retrieve doc just created, protected by JWT and FGA
         logger.info("Will call resource server to get document with ID " + randomId + ", should now have FGA access");
         String readResponse = restClient.get()
                 .uri("http://localhost:8082/docsaop/" + randomId)

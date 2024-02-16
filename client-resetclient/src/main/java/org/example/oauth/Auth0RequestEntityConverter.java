@@ -21,7 +21,7 @@ import java.util.Collections;
 //  - Auth0 requires an audience parameter on the authorization request to issue a JWT
 //  - There HAS to be a better way to add a single parameter instead of building the entire request!?!
 //  - See https://stackoverflow.com/questions/72362533/oauth2-client-with-extra-parameters-in-body-audience
-public class Auth0RequestEntityConverter implements
+class Auth0RequestEntityConverter implements
         Converter<OAuth2ClientCredentialsGrantRequest, RequestEntity<?>> {
 
     private final String audience;

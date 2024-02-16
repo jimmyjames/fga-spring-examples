@@ -7,6 +7,7 @@ import dev.openfga.sdk.errors.FgaInvalidParameterException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -46,8 +47,19 @@ public class DemoApp {
     }
 
     /**
+     * Simple Fga bean available for use in preauthorize. TODOs:
+     * - If userId is not specified, is it a good default to use the current principal name?
+     * - multiple params with optional params (e.g., userId) could be unwieldy
+     */
+    @PreAuthorize("@openFga.check('#id', 'document', 'reader', 'user')")
+    @GetMapping("/docsbean/{id}")
+    public String simpleBean(@PathVariable String id) {
+        return "You have access!";
+    }
+
+    /**
      * Fga custom annotation with a {@code @Before} pointcut available for use in preauthorize. TODOs:
-     * - Can we make some inferences and defaults for the current principal so we don't have to pass the user ID?
+     * - If userId is not specified, is it a good default to use the current principal name?
      * - Do we need more flexibility in the pointcut?
      * - would https://github.com/spring-projects/spring-security/issues/14480 make this implementation easier, and would it support SpEL for fields like object and userId
      */

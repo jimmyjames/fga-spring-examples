@@ -11,7 +11,7 @@ The goals of this repository are to:
 ## Samples
 
 - `simple-no-auth` is a sample FGA integration that has no Spring security configured. It is a simple example that makes assumptions about users and principals.
-- `resource-server` and `client-restclient` demonstrate a resource server with JWT authorization using the `okta-spring-boot-starter` and a client credentials flow to obtain a JWT to make API calls. The API's in `resource-server` are protected both by JWT and FGA checks.
+- `resource-server` and `client-restclient` demonstrate a resource server with JWT authorization using the `okta-spring-boot-starter` and a client credentials flow to obtain a JWT to make API calls. The API's in `resource-server` are protected both by JWT and FGA checks, and are called by `client-restclient`.
 
 ## Prerequisites
 
@@ -47,7 +47,6 @@ docker run --rm -e OPENFGA_HTTP_ADDR=0.0.0.0:4000 -p 4000:4000 -p 8081:8081 -p 3
 ```
 
 Create a store:
-
 
 ```bash
 fga store create --name "Test Store" --api-url http://localhost:4000

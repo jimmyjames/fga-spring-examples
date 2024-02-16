@@ -1,4 +1,4 @@
-package org.example;
+package org.example.fga;
 
 import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.client.model.ClientCheckRequest;

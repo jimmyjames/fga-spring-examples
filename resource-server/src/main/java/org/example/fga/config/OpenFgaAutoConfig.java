@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.fga.config;
 
 import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.configuration.ClientConfiguration;

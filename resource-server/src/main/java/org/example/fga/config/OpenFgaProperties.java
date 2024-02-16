@@ -1,4 +1,4 @@
-package org.example.config;
+package org.example.fga.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

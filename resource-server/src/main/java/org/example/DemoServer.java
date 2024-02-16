@@ -4,6 +4,7 @@ import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.client.model.ClientTupleKey;
 import dev.openfga.sdk.api.client.model.ClientWriteRequest;
 import dev.openfga.sdk.errors.FgaInvalidParameterException;
+import org.example.fga.FgaCheck;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -20,16 +21,16 @@ import java.util.concurrent.ExecutionException;
 
 @SpringBootApplication
 @RestController
-public class DemoApp {
+public class DemoServer {
 
     private final OpenFgaClient fgaClient;
 
-    public DemoApp(OpenFgaClient fgaClient) {
+    public DemoServer(OpenFgaClient fgaClient) {
         this.fgaClient = fgaClient;
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoApp.class, args);
+        SpringApplication.run(DemoServer.class, args);
     }
 
     @Bean

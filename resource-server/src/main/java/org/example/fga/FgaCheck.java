@@ -1,4 +1,4 @@
-package org.example;
+package org.example.fga;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

@@ -49,7 +49,7 @@ docker run --rm -e OPENFGA_HTTP_ADDR=0.0.0.0:4000 -p 4000:4000 -p 8081:8081 -p 3
 Create a store:
 
 ```bash
-fga store create --name "Test Store" --api-url http://localhost:4000
+fga store create --name "Example Store" --api-url http://localhost:4000
 ```
 
 You should receive a response like this. Note the store ID value:
@@ -68,7 +68,7 @@ You should receive a response like this. Note the store ID value:
 Create an authorization model:
 
 ```bash
-fga model write --api-url http://localhost:4000 --store-id 01HPSDHYXAD9HS906YFG9CQM02 --file ./example-auth-model.json
+fga model write --api-url http://localhost:4000 --store-id STORE-ID-FROM-ABOVE --file ./example-auth-model.json
 ```
 
 You should receive a response like this. Note the `authorization_model_id`:

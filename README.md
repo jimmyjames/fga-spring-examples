@@ -17,7 +17,7 @@ It demonstrates:
 
 The goals of this repository are to:
 - Show how OpenFGA can be integrated with Spring today
-- Give insight into possible DX improvements, either through an FGA-owned starter/library, or direct Spring Security integration
+- Give insight into possible DX improvements, either through an FGA-owned starter/library, possible direct Spring Security integration, or customer guidance
 
 ## Usage
 

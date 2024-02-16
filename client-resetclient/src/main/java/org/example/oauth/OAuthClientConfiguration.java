@@ -5,10 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.endpoint.DefaultClientCredentialsTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequest;
+import org.springframework.security.oauth2.client.endpoint.OAuth2ClientCredentialsGrantRequestEntityConverter;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.util.MultiValueMap;
 
 /**
  * Configures Spring for the client credentials grant using Auth0
@@ -54,7 +57,7 @@ public class OAuthClientConfiguration {
                 OAuth2AuthorizedClientProviderBuilder.builder()
                         .clientCredentials(clientCredentialsGrantBuilder -> {
                             var clientCredentialsTokenResponseClient = new DefaultClientCredentialsTokenResponseClient();
-                            clientCredentialsTokenResponseClient.setRequestEntityConverter(new Auth0RequestEntityConverter(audience));
+                            clientCredentialsTokenResponseClient.setRequestEntityConverter(auth0RequestConverter());
                             clientCredentialsGrantBuilder.accessTokenResponseClient(clientCredentialsTokenResponseClient);
                         })
                         .build();
@@ -67,4 +70,22 @@ public class OAuthClientConfiguration {
         return authorizedClientManager;
     }
 
+    /**
+     * Adds the {@code audience} parameter to the authorization request, which is required by
+     * Auth0 to obtain a JWT for the specified API audience.
+     * @return an {@link OAuth2ClientCredentialsGrantRequestEntityConverter} instance that adds the
+     *         {@code audience} parameter
+     */
+    private OAuth2ClientCredentialsGrantRequestEntityConverter auth0RequestConverter() {
+        return new OAuth2ClientCredentialsGrantRequestEntityConverter() {
+            @Override
+            protected MultiValueMap<String, String> createParameters(
+                    OAuth2ClientCredentialsGrantRequest clientCredentialsGrantRequest) {
+
+                var parameters = super.createParameters(clientCredentialsGrantRequest);
+                parameters.add("audience", audience);
+                return parameters;
+            }
+        };
+    }
 }

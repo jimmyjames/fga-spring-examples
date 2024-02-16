@@ -33,6 +33,7 @@ public class DemoApp {
      * Simple Fga bean available for use in preauthorize. TODOs:
      * - do we always need to hard-code the user ID or can we make some inferences and defaults for the current principal?
      * - SpEL to create object (object type : id) isn't very friendly
+     * - optional/default params (e.g., userId, type) not very friendly
      ******************************************************************************************************************/
     @PreAuthorize("@openFga.check('user:123', 'reader', 'document:'.concat(#id))")
     @GetMapping("/docs/{id}")
@@ -45,6 +46,7 @@ public class DemoApp {
      * Fga custom annotation with a {@code @Before} pointcut available for use in preauthorize. TODOs:
      * - Can we make some inferences and defaults for the current principal so we don't have to pass the user ID?
      * - Do we need more flexibility in the pointcut?
+     * - would https://github.com/spring-projects/spring-security/issues/14480 make this implementation easier, and would it support SpEL for fields like object and userId
      ******************************************************************************************************************/
     @FgaCheck(userType="user", userId="123", relation="reader", objectType="document", object="#id")
     @GetMapping("/docsaop/{id}")

@@ -29,8 +29,18 @@ public class DemoClient implements CommandLineRunner {
         this.authorizedClientServiceAndManager = authorizedClientServiceAndManager;
     }
 
+    /**
+     * Runs on startup and demonstrates:
+     * <ol>
+     *     <li>Obtains a JWT from Auth0 using the client credentials flow</li>
+     *     <li>Makes a call to the resource server for a document for which no FGA read relation exists for the user and document</li>
+     *     <li>Makes a call to the resource server to create a document, and writes FGA authorization data</li>
+     *     <li>Makes another call to the resource server for the document just created, passing the FGA relationship check</li>
+     * </ol>
+     * @param args
+     */
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args)  {
 
         // Build an OAuth2 request for the Okta provider
         OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest.withClientRegistrationId("okta")

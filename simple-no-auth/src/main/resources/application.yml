@@ -1,0 +1,14 @@
+openfga:
+  fgaApiUrl: http://localhost:4000
+  fgaStoreId:
+  authorizationModelId:
+
+logging:
+  level:
+    root: WARN
+    com:
+      fga:
+        example: TRACE
+    org:
+      springframework:
+        security: DEBUG

@@ -1,17 +1,6 @@
 # Spring Security Examples with OpenFGA
 
-Simple repository demonstrating use cases and possible solutions to integrate FGA with Spring Security.
-
-> NOTE: For simplicity, this sample **DOES NOT USE ANY AUTHENTICATION**, either for the Fga client or for Spring. This is NOT RECOMMENDED FOR PRODUCTION USE!
-
-## About
-
-This is a WIP repo demonstrating various possible ways to use FGA in a Spring application.
-
-It demonstrates:
-- Using a simple properties configuration to configure and build an `OpenFgaClient` that can be injected into any Spring component. This can be used to perform any FGA API calls, but primary use case is likely to write authorization data and is shown here.
-- Using a simple Bean with `@PreAuthorize` to perform a method-level FGA check
-- Using a custom annotation (`@FgaCheck`) with an `@Aspect` implementation to perform a method-level FGA check
+Repository demonstrating use cases and possible solutions to integrate FGA with Spring Security.
 
 ## Goals
 
@@ -19,71 +8,121 @@ The goals of this repository are to:
 - Show how OpenFGA can be integrated with Spring today
 - Give insight into possible DX improvements, either through an FGA-owned starter/library, possible direct Spring Security integration, or customer guidance
 
+## Samples
+
+- `simple-no-auth` is a sample FGA integration that has no Spring security configured. It is a simple example that makes assumptions about users and principals.
+- `resource-server` and `client-restclient` demonstrate a resource server with JWT authorization using the `okta-spring-boot-starter` and a client credentials flow to obtain a JWT to make API calls. The API's in `resource-server` are protected both by JWT and FGA checks, and are called by `client-restclient`.
+
+## Prerequisites
+
+- Docker
+- Java 17
+- [OpenFGA CLI](https://github.com/openfga/cli)
+
 ## Usage
 
-### Run OpenFGA
+### Simple no-auth sample
+
+To run the `simple-no-auth` sample, see the [README](./simple-no-auth/README.md).
+
+### Client credentials sample
+
+This sample comprises of two parts:
+- A resource server configured with the `okta-spring-boot-starter` to secure endpoints with JWTs issued by Auth0. It protects APIs with JWT authorization and uses FGA to protect endpoints and write authorization data.
+- A client that uses the client credentials flow to obtain a JWT to call the resource server.
+
+#### Create Auth0 application and API
+
+- Create a new Auth0 API and note the API identifier
+- Create a new Auth0 machine-to-machine application, and note the client ID and secret
+
+#### Start OpenFGA and create a store and authorization model
+
+This will start an in-memory database OpenFGA server:
+
 
 ```bash
 docker pull openfga/openfga:latest
 docker run --rm -e OPENFGA_HTTP_ADDR=0.0.0.0:4000 -p 4000:4000 -p 8081:8081 -p 3000:3000 openfga/openfga run
 ```
 
-See the [OpenFGA docs](https://openfga.dev/docs/getting-started/setup-openfga/docker#step-by-step) for more information.
+Create a store:
 
-### Start the app
+```bash
+fga store create --name "Example Store" --api-url http://localhost:4000
+```
+
+You should receive a response like this. Note the store ID value:
+
+```json
+{
+  "store": {
+    "created_at":"2024-02-16T16:56:21.162910175Z",
+    "id":"01HPSDHYXAD9HS906YFG9CQM02",
+    "name":"Test Store",
+    "updated_at":"2024-02-16T16:56:21.162910175Z"
+  }
+}
+```
+
+Create an authorization model:
+
+```bash
+fga model write --api-url http://localhost:4000 --store-id STORE-ID-FROM-ABOVE --file ./example-auth-model.json
+```
+
+You should receive a response like this. Note the `authorization_model_id`:
+
+
+```json
+{
+  "authorization_model_id":"01HPSDPTTC209FQ0P4AMK3AZPE"
+}
+```
+
+#### Configure resource server
+
+Configure the application properties:
+
+```bash
+cd resource-server
+cp src/main/resources/application.yml.example src/main/resources/application.yml
+```
+
+In `application.yml`, replace the `oauth2` properties with the values from your Auth0 application and API.
+
+Also replace the values for `fga-store-id` and `fga-authorization-model-id` with the values created above.
+
+#### Run resource server
 
 ```bash
 ./gradlew bootRun
 ```
 
-On startup, the application will create an in-memory store with a simple authorization model, and write a tuple representing the following relation:
+This will start the server on port 8082.
+
+#### Configure the client
+
+Configure the application properties:
+
+```bash
+cd client-restclient
+cp src/main/resources/application.yml.example src/main/resources/application.yml
+```
+
+Replace the oauth2 values and `auth0-audience` with the values of your Auth0 application and API identifier.
+
+#### Start the application
 
 ```
-user: user:123
-relation: reader
-object: document:1
+./gradlew bootRun
 ```
 
-The examples hard-code a userId of `user:123`. We should consider if we can provide a default of the currently authenticated principal when authentication is added.
+This will start the application, execute the client credentials grant to obtain a JWT, and then makes calls to the resource server:
 
-### Successful API call using simple FGA bean
+- Attempt to `GET` a "document" for which the current principal does **not** have an FGA relation to. This request should fail with a `403`.
+- A call to create a "document", which will create an FGA relationship associated with the principal.
+- Another attempt to get the document, which should now return successfully as there is a `reader` relationship between the principal and the document.
 
-Execute a GET request to obtain `document:1`:
+You can see the results of these calls in the application logs.
 
-`curl -X GET http://localhost:8080/docs/1`
-
-You should see a simple success message in the console.
-
-### Unauthorized API call using simple FGA bean
-
-Execute a GET request to obtain `document:2`, for which `user:2` does not have a `reader` relation:
-
-`curl -X http://localhost:8080/docs/2 -v`
-
-You should receive a 403 response as `user:123` does not have the `reader` relation to `document:2`
-
-### Successful API call using FGA annotation/aop
-
-Execute a GET request to obtain `document:1`:
-
-`curl -X GET http://localhost:8080/docsaop/1`
-
-You should see a simple success message in the console.
-
-### Unauthorized API call using FGA annotation/aop
-
-Execute a GET request to obtain `document:2`, for which `user:2` does not have a `reader` relation:
-
-`curl -X http://localhost:8080/docsaop/2 -v`
-
-You should receive a 403 response as `user:123` does not have the `reader` relation to `document:2`
-
-### Execute a POST request to write to FGA
-
-Execute a POST request to create a relationship between `user:123` and `document:2`:
-
-`curl -X POST -H "Content-Type: text/plain" -d "2" http://localhost:8080/docs`
-
-You should see a message that document with ID `2` was created
-
-You can now execute either of the GET requests to verify that `user:123` now has access to `document:2`

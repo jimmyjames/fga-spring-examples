@@ -126,3 +126,50 @@ This will start the application, execute the client credentials grant to obtain 
 
 You can see the results of these calls in the application logs.
 
+## Implementation details
+
+The samples demonstrate the following:
+
+### Auto-configuration of `OpenFgaClient`
+
+Uses custom application property values to create and make available to components an `OpenFgaClient`. This can be used by applications to interact with the FGA API directly, e.g., to write authorization data.
+
+An application can configure the client in application properties for their usage:
+
+```yaml
+openfga.fgaApiUrl=FGA_API_URL
+openfga.fgaStoreId=FGA_STORE_ID
+openfga.fgaAuthorizationModelId=FGA_AUTHORIZATION_MODEL_ID
+openfga.fgaApiAudience=FGA_API_AUDIENCE
+openfga.fgaClientId=FGA_CLIENT_ID
+openfga.fgaClientSecret=FGA_CLIENT_SECRET
+...
+```
+
+Note that for simplicity purposes, this sample does not support FGA authorization, thus is NOT suitable for production use.
+
+### Simple FGA check bean definition
+
+A simple bean is defined to perform an authorization check:
+
+```java
+@PreAuthorize("@openFga.check('#id', 'document', 'reader', 'user')")
+public String getDocumentWithSimpleFgaBean(@PathVariable String id) {
+    return "You have access!";
+}
+```
+
+In the example above, the currently authenticated principal's name is used as the user ID by default. It can also be explicitly passed.
+
+### Custom `FgaCheck` annotation and aspect
+
+A custom `@FgaCheck` annotation was created to demonstrate using an explicit FGA annotation and aspect to execute an FGA check prior to the method execution:
+
+```java
+@FgaCheck(userType="user", relation="reader", objectType="document", object="#id")
+public String customAnnotation(@PathVariable String id) {
+    return "You have access!";
+}
+```
+
+Similar to the bean definition, it uses the currently authenticated principal by default for the user ID.

@@ -12,11 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -95,8 +94,7 @@ public class LoadFgaData implements CommandLineRunner {
 
     private String loadResource(String filename) {
         try {
-            var filepath = Paths.get("src", "main", "resources", filename);
-            return Files.readString(filepath, StandardCharsets.UTF_8);
+            return new ClassPathResource(filename).getContentAsString(StandardCharsets.UTF_8);
         } catch (IOException ioe) {
             throw new RuntimeException("Unable to load resource: " + filename, ioe);
         }

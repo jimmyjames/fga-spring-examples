@@ -13,7 +13,7 @@ class OpenFgaContainerConfiguration {
 
 	@Bean
 	GenericContainer<?> openFgaContainer(DynamicPropertyRegistry registry) {
-		var result = new GenericContainer<>("openfga/openfga:latest")
+		var result = new GenericContainer<>("openfga/openfga:v1.4.3")
 				.withCommand("run")
 				.waitingFor(Wait.forHttp("/playground").forPort(3000).withStartupTimeout(Duration.ofMinutes(2)))
 				.withEnv("OPENFGA_HTTP_ADDR","0.0.0.0:4000")

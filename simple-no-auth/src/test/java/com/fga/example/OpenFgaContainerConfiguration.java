@@ -20,7 +20,8 @@ class OpenFgaContainerConfiguration {
 				.withExposedPorts(4000, 8081, 3000);
 		registry.add("openfga.fgaApiUrl", () -> {
 			Integer httpPort = result.getMappedPort(4000);
-			return "http://localhost:"+httpPort;
+			String host = result.getHost();
+			return "http://" + host +":"+httpPort;
 		});
 		return result;
 	}

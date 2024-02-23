@@ -21,19 +21,14 @@ The goals of this repository are to:
 
 ## Usage
 
-### Run OpenFGA
+### Start the app
 
-```bash
-docker pull openfga/openfga:latest
-docker run --rm -e OPENFGA_HTTP_ADDR=0.0.0.0:4000 -p 4000:4000 -p 8081:8081 -p 3000:3000 openfga/openfga run
-```
+This starts the application along with the openfga docker image.
 
 See the [OpenFGA docs](https://openfga.dev/docs/getting-started/setup-openfga/docker#step-by-step) for more information.
 
-### Start the app
-
 ```bash
-./gradlew bootRun
+./gradlew bootTestRun
 ```
 
 On startup, the application will create an in-memory store with a simple authorization model, and write a tuple representing the following relation:

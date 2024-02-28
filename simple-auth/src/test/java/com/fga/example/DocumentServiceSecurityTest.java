@@ -1,6 +1,7 @@
 package com.fga.example;
 
 import com.fga.example.service.DocumentService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,21 @@ class DocumentServiceSecurityTest {
 	void preAuthorizeWhenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
 				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
+	@WithHonestUser
+	void preOpenFgaCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_GRANTED_ID))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void preOpenFgaCheckWhenDenied(@Autowired DocumentService documentService) {
+		Assertions.setMaxStackTraceElementsDisplayed(Integer.MAX_VALUE);
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_DENIED_ID));
 	}
 
 	@Test

@@ -14,12 +14,12 @@ public class DocumentController {
 
     @GetMapping("/docs/{id}")
     public String simpleBean(@PathVariable String id) {
-        return documentService.getDocumentWithSimpleFgaBean(id);
+        return documentService.getDocumentWithPreAuthorize(id);
     }
 
     @GetMapping("/docsaop/{id}")
     public String customAnnotation(@PathVariable String id) {
-        return documentService.getDocumentWithFgaAnnotation(id);
+        return documentService.getDocumentWithFgaCheck(id);
     }
 
     @PostMapping("/docs")

@@ -27,7 +27,7 @@ public class DocumentService {
      * - multiple params of same type with optional params (e.g., userId) could be unwieldy
      */
     @PreAuthorize("@openFga.check(#id, 'document', 'reader', 'user', authentication?.name)")
-    public String getDocumentWithSimpleFgaBean(String id) {
+    public String getDocumentWithPreAuthorize(String id) {
             return "You have reader access to this document";
     }
 
@@ -54,7 +54,7 @@ public class DocumentService {
      * - would https://github.com/spring-projects/spring-security/issues/14480 make this implementation easier, and would it support SpEL for fields like object and userId
      */
     @FgaCheck(userType="user", userId="honest_user", relation="reader", objectType="document", object="#id")
-    public String getDocumentWithFgaAnnotation(String id) {
+    public String getDocumentWithFgaCheck(String id) {
         return "You have reader access to this document!";
     }
 

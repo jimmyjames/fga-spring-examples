@@ -23,7 +23,7 @@ class DocumentServiceSecurityTest {
 	@Test
 	@WithHonestUser
 	void preAuthorizeWhenGranted(@Autowired DocumentService documentService) {
-		assertThatCode(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_GRANTED_ID))
+		assertThatCode(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 
@@ -31,14 +31,14 @@ class DocumentServiceSecurityTest {
 	@WithHonestUser
 	void preAuthorizeWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
-				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
+				.isThrownBy(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_DENIED_ID));
 	}
 
 	@Test
 	@WithEvilUser
 	void preAuthorizeWhenWrongUserThenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
-				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
+				.isThrownBy(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_DENIED_ID));
 	}
 
 	@Test
@@ -79,14 +79,14 @@ class DocumentServiceSecurityTest {
 
 	@Test
 	void fgaCheckWhenGranted(@Autowired DocumentService documentService) {
-		assertThatCode(() -> documentService.getDocumentWithFgaAnnotation(DOCUMENT_GRANTED_ID))
+		assertThatCode(() -> documentService.getDocumentWithFgaCheck(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 
 	@Test
 	void fgaCheckWhenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
-				.isThrownBy(() -> documentService.getDocumentWithFgaAnnotation(DOCUMENT_DENIED_ID));
+				.isThrownBy(() -> documentService.getDocumentWithFgaCheck(DOCUMENT_DENIED_ID));
 	}
 
 }

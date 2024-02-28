@@ -50,6 +50,21 @@ class DocumentServiceSecurityTest {
 	}
 
 	@Test
+	@WithHonestUser
+	void preReadDocumentCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.getDocumentWithPreReadDocumentCheck(DOCUMENT_GRANTED_ID))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void preReadDocumentCheckWhenDenied(@Autowired DocumentService documentService) {
+		Assertions.setMaxStackTraceElementsDisplayed(Integer.MAX_VALUE);
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreReadDocumentCheck(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
 	void fgaCheckWhenGranted(@Autowired DocumentService documentService) {
 		assertThatCode(() -> documentService.getDocumentWithFgaAnnotation(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();

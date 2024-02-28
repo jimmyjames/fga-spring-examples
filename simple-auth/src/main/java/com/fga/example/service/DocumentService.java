@@ -1,6 +1,7 @@
 package com.fga.example.service;
 
 import com.fga.example.fga.FgaCheck;
+import com.fga.example.fga.PreReadDocumentCheck;
 import com.fga.example.fga.PreOpenFgaCheck;
 import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.client.model.ClientTupleKey;
@@ -35,6 +36,14 @@ public class DocumentService {
      */
     @PreOpenFgaCheck(userType="'user'", relation="'reader'", objectType="'document'", object="#id")
     public String getDocumentWithPreOpenFgaCheck(String id) {
+        return "You have reader access to this document";
+    }
+
+    /**
+     * Uses the new PreAuthorize meta-annotation support
+     */
+    @PreReadDocumentCheck("#id")
+    public String getDocumentWithPreReadDocumentCheck(String id) {
         return "You have reader access to this document";
     }
 

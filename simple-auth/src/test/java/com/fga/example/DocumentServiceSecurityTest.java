@@ -28,8 +28,15 @@ class DocumentServiceSecurityTest {
 	}
 
 	@Test
+	@WithHonestUser
+	void preAuthorizeWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
 	@WithEvilUser
-	void preAuthorizeWhenDenied(@Autowired DocumentService documentService) {
+	void preAuthorizeWhenWrongUserThenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
 				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
 	}
@@ -42,9 +49,15 @@ class DocumentServiceSecurityTest {
 	}
 
 	@Test
+	@WithHonestUser
+	void preOpenFgaCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
 	@WithEvilUser
-	void preOpenFgaCheckWhenDenied(@Autowired DocumentService documentService) {
-		Assertions.setMaxStackTraceElementsDisplayed(Integer.MAX_VALUE);
+	void preOpenFgaCheckWhenWrongUserDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
 				.isThrownBy(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_DENIED_ID));
 	}

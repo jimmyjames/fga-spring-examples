@@ -2,17 +2,40 @@ package com.fga.example.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.List;
+
 @ConfigurationProperties(prefix="openfga")
 public class OpenFgaProperties {
 
     private String fgaApiUrl;
     private String fgaStoreId;
+    private String fgaStoreName;
     private String fgaApiTokenIssuer;
     private String fgaApiAudience;
     private String fgaClientId;
     private String fgaClientSecret;
-
     private String fgaAuthorizationModelId;
+    private String fgaAuthModelSchema;
+    private List<String> fgaInitialRelationshipTuple;
+
+    private static final String FGA_MODEL_SCHEMA_DEFAULT = "classpath:data/openfga-schema.json";
+    private static final List<String> FGA_RELATIONSHIP_TUPLE_DEFAULT = List.of("classpath:data/openfga-tuple.json");
+
+    public String getFgaStoreName() {
+        return fgaStoreName;
+    }
+
+    public void setFgaStoreName(String fgaStoreName) {
+        this.fgaStoreName = fgaStoreName;
+    }
+
+    public String getFgaAuthModelSchema() {
+        return fgaAuthModelSchema == null ? FGA_MODEL_SCHEMA_DEFAULT : fgaAuthModelSchema;
+    }
+
+    public void setFgaAuthModelSchema(String fgaAuthModelSchema) {
+        this.fgaAuthModelSchema = fgaAuthModelSchema;
+    }
 
     public String getFgaApiUrl() {
         return fgaApiUrl;
@@ -70,4 +93,11 @@ public class OpenFgaProperties {
         this.fgaAuthorizationModelId = fgaAuthorizationModelId;
     }
 
+    public List<String> getFgaInitialRelationshipTuple() {
+        return fgaInitialRelationshipTuple == null ? FGA_RELATIONSHIP_TUPLE_DEFAULT : fgaInitialRelationshipTuple;
+    }
+
+    public void setFgaInitialRelationshipTuple(List<String> fgaInitialRelationshipTuple) {
+        this.fgaInitialRelationshipTuple = fgaInitialRelationshipTuple;
+    }
 }

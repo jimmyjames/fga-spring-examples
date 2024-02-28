@@ -1,7 +1,9 @@
 openfga:
   fgaApiUrl: http://localhost:4000
   fgaStoreId:
-  authorizationModelId:
+  fgaStoreName: test
+#  fgaAuthModelSchema: classpath:/example-auth-model.json
+#  fgaInitialRelationshipTuple: classpath:/example-relationship-tuple.json
 
 logging:
   level:

@@ -10,7 +10,7 @@ The goals of this repository are to:
 
 ## Samples
 
-- `simple-no-auth` is a sample FGA integration that has no Spring security configured. It is a simple example that makes assumptions about users and principals.
+- `simple-auth` is a sample FGA integration that has a basic Spring security configured. It is a simple example that makes assumptions about users and principals.
 - `resource-server` and `client-restclient` demonstrate a resource server with JWT authorization using the `okta-spring-boot-starter` and a client credentials flow to obtain a JWT to make API calls. The API's in `resource-server` are protected both by JWT and FGA checks, and are called by `client-restclient`.
 
 ## Prerequisites
@@ -23,7 +23,7 @@ The goals of this repository are to:
 
 ### Simple no-auth sample
 
-To run the `simple-no-auth` sample, see the [README](./simple-no-auth/README.md).
+To run the `simple-auth` sample, see the [README](./simple-auth/README.md).
 
 ### Client credentials sample
 

@@ -14,16 +14,14 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService users() {
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
-        UserDetails user = users
-                .username("user")
+        User.UserBuilder users = User.withDefaultPasswordEncoder()
                 .password("password")
-                .roles("USER")
+                .roles("USER");
+        UserDetails user = users
+                .username("honest_user")
                 .build();
         UserDetails admin = users
-                .username("admin")
-                .password("password")
-                .roles("ADMIN")
+                .username("evil_user")
                 .build();
         return new InMemoryUserDetailsManager(user, admin);
     }

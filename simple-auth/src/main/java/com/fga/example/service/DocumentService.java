@@ -21,11 +21,10 @@ public class DocumentService {
     }
 
     /**
-     * Simple Fga bean available for use in preauthorize. TODOs:
-     * - without any auth, we are just hard-coding the userId for simple demo purposes. Can we infer it from the principal in a real example?
+     * Simple Fga bean available for use in preauthorize.
      * - multiple params of same type with optional params (e.g., userId) could be unwieldy
      */
-    @PreAuthorize("@openFga.check(#id, 'document', 'reader', 'user', '123')")
+    @PreAuthorize("@openFga.check(#id, 'document', 'reader', 'user', authentication?.name)")
     public String getDocumentWithSimpleFgaBean(String id) {
             return "You have reader access to this document";
     }
@@ -36,7 +35,7 @@ public class DocumentService {
      * - Do we need more flexibility in the pointcut?
      * - would https://github.com/spring-projects/spring-security/issues/14480 make this implementation easier, and would it support SpEL for fields like object and userId
      */
-    @FgaCheck(userType="user", userId="123", relation="reader", objectType="document", object="#id")
+    @FgaCheck(userType="user", userId="honest_user", relation="reader", objectType="document", object="#id")
     public String getDocumentWithFgaAnnotation(String id) {
         return "You have reader access to this document!";
     }

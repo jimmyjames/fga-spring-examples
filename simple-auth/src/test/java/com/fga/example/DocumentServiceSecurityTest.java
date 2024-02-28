@@ -20,12 +20,14 @@ class DocumentServiceSecurityTest {
 	public static final String DOCUMENT_DENIED_ID = "2";
 
 	@Test
+	@WithHonestUser
 	void preAuthorizeWhenGranted(@Autowired DocumentService documentService) {
 		assertThatCode(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 
 	@Test
+	@WithEvilUser
 	void preAuthorizeWhenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
 				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
@@ -33,7 +35,7 @@ class DocumentServiceSecurityTest {
 
 	@Test
 	void fgaCheckWhenGranted(@Autowired DocumentService documentService) {
-		assertThatCode(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_GRANTED_ID))
+		assertThatCode(() -> documentService.getDocumentWithFgaAnnotation(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 

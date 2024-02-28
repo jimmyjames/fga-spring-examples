@@ -1,12 +1,11 @@
 package com.fga.example.service;
 
-import com.fga.example.fga.FgaCheck;
-import com.fga.example.fga.PreReadDocumentCheck;
-import com.fga.example.fga.PreOpenFgaCheck;
+import com.fga.example.fga.*;
 import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.client.model.ClientTupleKey;
 import dev.openfga.sdk.api.client.model.ClientWriteRequest;
 import dev.openfga.sdk.errors.FgaInvalidParameterException;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +44,16 @@ public class DocumentService {
     @PreReadDocumentCheck("#id")
     public Document getDocumentWithPreReadDocumentCheck(String id) {
         return new Document(id, "You have reader access to this document");
+    }
+
+    @PostOpenFgaCheck(userType="'user'", relation="'reader'", objectType="'document'", object="returnObject.id")
+    public Document findByContentWithPostOpenFgaCheck(String content) {
+        return new Document("1", "Found the content here: '" + content + "'");
+    }
+
+    @PostReadDocumentCheck("returnObject.id")
+    public Document findByContentWithPostReadDocumentCheck(String content) {
+        return new Document("1", "Found the content here: '" + content + "'");
     }
 
     /**

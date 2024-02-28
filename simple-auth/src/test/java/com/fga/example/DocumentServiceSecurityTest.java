@@ -56,6 +56,34 @@ class DocumentServiceSecurityTest {
 	}
 
 	@Test
+	@WithHonestUser
+	void postOpenFgaCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.findByContentWithPostOpenFgaCheck("Hello Spring Security!"))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void postOpenFgaCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.findByContentWithPostOpenFgaCheck("Hello Spring Security!"));
+	}
+
+	@Test
+	@WithHonestUser
+	void postReadDocumentCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.findByContentWithPostReadDocumentCheck("Hello Spring Security!"))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void postReadDocumentCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.findByContentWithPostReadDocumentCheck("Hello Spring Security!"));
+	}
+
+	@Test
 	@WithEvilUser
 	void preOpenFgaCheckWhenWrongUserDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)

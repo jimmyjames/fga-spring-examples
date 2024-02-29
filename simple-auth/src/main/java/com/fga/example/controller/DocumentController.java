@@ -1,5 +1,6 @@
 package com.fga.example.controller;
 
+import com.fga.example.service.Document;
 import com.fga.example.service.DocumentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,13 @@ public class DocumentController {
     }
 
     @GetMapping("/docs/{id}")
-    public String simpleBean(@PathVariable String id) {
-        return documentService.getDocumentWithSimpleFgaBean(id);
+    public Document simpleBean(@PathVariable String id) {
+        return documentService.getDocumentWithPreAuthorize(id);
     }
 
     @GetMapping("/docsaop/{id}")
-    public String customAnnotation(@PathVariable String id) {
-        return documentService.getDocumentWithFgaAnnotation(id);
+    public Document customAnnotation(@PathVariable String id) {
+        return documentService.getDocumentWithFgaCheck(id);
     }
 
     @PostMapping("/docs")

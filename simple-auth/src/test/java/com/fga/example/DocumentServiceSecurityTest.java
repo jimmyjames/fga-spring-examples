@@ -1,6 +1,7 @@
 package com.fga.example;
 
 import com.fga.example.service.DocumentService;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,27 +21,100 @@ class DocumentServiceSecurityTest {
 	public static final String DOCUMENT_DENIED_ID = "2";
 
 	@Test
+	@WithHonestUser
 	void preAuthorizeWhenGranted(@Autowired DocumentService documentService) {
-		assertThatCode(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_GRANTED_ID))
+		assertThatCode(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 
 	@Test
-	void preAuthorizeWhenDenied(@Autowired DocumentService documentService) {
+	@WithHonestUser
+	void preAuthorizeWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
-				.isThrownBy(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_DENIED_ID));
+				.isThrownBy(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
+	@WithEvilUser
+	void preAuthorizeWhenWrongUserThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreAuthorize(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
+	@WithHonestUser
+	void preOpenFgaCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_GRANTED_ID))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithHonestUser
+	void preOpenFgaCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
+	@WithHonestUser
+	void postOpenFgaCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.findByContentWithPostOpenFgaCheck("Hello Spring Security!"))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void postOpenFgaCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.findByContentWithPostOpenFgaCheck("Hello Spring Security!"));
+	}
+
+	@Test
+	@WithHonestUser
+	void postReadDocumentCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.findByContentWithPostReadDocumentCheck("Hello Spring Security!"))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void postReadDocumentCheckWhenNoDocumentThenDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.findByContentWithPostReadDocumentCheck("Hello Spring Security!"));
+	}
+
+	@Test
+	@WithEvilUser
+	void preOpenFgaCheckWhenWrongUserDenied(@Autowired DocumentService documentService) {
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreOpenFgaCheck(DOCUMENT_DENIED_ID));
+	}
+
+	@Test
+	@WithHonestUser
+	void preReadDocumentCheckWhenGranted(@Autowired DocumentService documentService) {
+		assertThatCode(() -> documentService.getDocumentWithPreReadDocumentCheck(DOCUMENT_GRANTED_ID))
+				.doesNotThrowAnyException();
+	}
+
+	@Test
+	@WithEvilUser
+	void preReadDocumentCheckWhenDenied(@Autowired DocumentService documentService) {
+		Assertions.setMaxStackTraceElementsDisplayed(Integer.MAX_VALUE);
+		assertThatExceptionOfType(AccessDeniedException.class)
+				.isThrownBy(() -> documentService.getDocumentWithPreReadDocumentCheck(DOCUMENT_DENIED_ID));
 	}
 
 	@Test
 	void fgaCheckWhenGranted(@Autowired DocumentService documentService) {
-		assertThatCode(() -> documentService.getDocumentWithSimpleFgaBean(DOCUMENT_GRANTED_ID))
+		assertThatCode(() -> documentService.getDocumentWithFgaCheck(DOCUMENT_GRANTED_ID))
 				.doesNotThrowAnyException();
 	}
 
 	@Test
 	void fgaCheckWhenDenied(@Autowired DocumentService documentService) {
 		assertThatExceptionOfType(AccessDeniedException.class)
-				.isThrownBy(() -> documentService.getDocumentWithFgaAnnotation(DOCUMENT_DENIED_ID));
+				.isThrownBy(() -> documentService.getDocumentWithFgaCheck(DOCUMENT_DENIED_ID));
 	}
 
 }

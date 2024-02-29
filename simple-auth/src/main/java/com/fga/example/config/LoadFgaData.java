@@ -76,7 +76,7 @@ public class LoadFgaData implements CommandLineRunner {
                 .write(
                         new ClientWriteRequest()
                                 .writes(List.of(new ClientTupleKey()
-                                        .user("user:123")
+                                        .user("user:honest_user")
                                         .relation("reader")
                                         ._object("document:1"))),
                         new ClientWriteOptions()

@@ -7,8 +7,12 @@ plugins {
 group = 'org.example'
 version = '1.0-SNAPSHOT'
 
+ext['spring-security.version'] = '6.3.0-SNAPSHOT'
+
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -22,6 +26,7 @@ dependencies {
     implementation 'dev.openfga:openfga-sdk:0.3.2'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 }
 

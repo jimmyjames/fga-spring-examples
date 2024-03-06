@@ -8,6 +8,7 @@ group = 'org.example'
 version = '1.0-SNAPSHOT'
 
 ext['spring-security.version'] = '6.3.0-SNAPSHOT'
+ext['testcontainers.version'] = '1.19.7'
 
 repositories {
     mavenCentral()
@@ -28,6 +29,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:openfga'
 }
 
 test {

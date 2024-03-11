@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.service.connection.ConnectionDetailsFactory=\
+com.fga.example.service.connection.OpenFgaContainerConnectionDetailsFactory

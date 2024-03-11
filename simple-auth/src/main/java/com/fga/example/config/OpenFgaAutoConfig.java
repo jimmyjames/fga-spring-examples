@@ -4,6 +4,7 @@ import dev.openfga.sdk.api.client.OpenFgaClient;
 import dev.openfga.sdk.api.configuration.ClientConfiguration;
 import dev.openfga.sdk.errors.FgaInvalidParameterException;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +48,12 @@ public class OpenFgaAutoConfig {
             // TODO how to best handle
             throw new RuntimeException(e);
         }
+    }
+
+    @Bean
+    @ConditionalOnBean({OpenFgaClient.class})
+    public InitializeOpenFgaData initializeOpenFgaData(OpenFgaClient openFgaClient, OpenFgaProperties properties) {
+        return new InitializeOpenFgaData(properties, openFgaClient);
     }
 
     private static class PropertiesOpenFgaConnectionDetails implements OpenFgaConnectionDetails {
